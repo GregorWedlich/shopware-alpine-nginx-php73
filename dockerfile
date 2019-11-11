@@ -3,10 +3,21 @@ LABEL Maintainer="Gregor Wedlich <gregor.wedlich@gmail.com>" \
     Description="Alpine Linux Lightweight container with NGINX 1.16, PHP-FPM7.3 and Shopware5.6.2"
 
 # Install packages
-RUN apk --no-cache add php7 php7-cli php7-fpm php7-common php7-mysqli php7-curl \
+RUN apk update && \
+    apk --no-cache add php7 php7-cli php7-fpm php7-common php7-mysqli php7-curl \
     php7-json php7-zip php7-gd php7-xml php7-mbstring php7-opcache php7-session \
     php7-simplexml php7-pdo php7-pdo_mysql nginx supervisor curl nano unzip bash \
     php7-iconv php7-fileinfo php7-ftp php7-opcache
+
+ENV PHP_MEMORY_LIMIT="512M"
+ENV PHP_MAX_UPLOAD="50M"
+ENV PHP_MAX_FILE_UPLOAD="200"
+ENV PHP_MAX_POST="100M"
+ENV PHP_DISPLAY_ERRORS="On"
+ENV PHP_DISPLAY_STARTUP_ERRORS="On"
+ENV PHP_ERROR_REPORTING="E_COMPILE_ERROR\|E_RECOVERABLE_ERROR\|E_ERROR\|E_CORE_ERROR"
+ENV PHP_CGI_FIX_PATHINFO=0
+ENV TIMEZONE="Africa/Johannesburg"
 
 # Configure nginx
 COPY conf/nginx.conf /etc/nginx/nginx.conf
