@@ -6,11 +6,12 @@ LABEL Maintainer="Gregor Wedlich <gregor.wedlich@gmail.com>" \
 RUN apk update && \
     apk --no-cache add php7 php7-cli php7-fpm php7-common php7-mysqli php7-curl \
     php7-json php7-zip php7-gd php7-xml php7-mbstring php7-opcache php7-session \
-    php7-simplexml php7-pdo php7-pdo_mysql nginx supervisor curl nano unzip bash \
-    php7-iconv php7-fileinfo php7-ftp php7-opcache php7-pecl-apcu
+    php7-simplexml php7-pdo php7-pdo_mysql nginx php7-iconv php7-fileinfo php7-ftp \
+    php7-opcache php7-pecl-apcu php7-dom php7-tokenizer supervisor curl nano unzip bash
 
 # Configure nginx
 COPY conf/nginx.conf /etc/nginx/nginx.conf
+
 # Remove default server definition
 RUN rm /etc/nginx/conf.d/default.conf
 
@@ -50,13 +51,13 @@ RUN mkdir -p /home/shopware_files
 ADD ./conf/download-sw.sh /home/shopware_files/download-sw.sh
 RUN chmod +x /home/shopware_files/download-sw.sh && /home/shopware_files/download-sw.sh
 
-# Opcache folder
+# Add Opcache folder
 RUN mkdir -p /var/www/html/.opcache
 
 # 
 RUN chown -R nobody.nobody /var/www/html
 
-# Make the document root a volume
+# Bind the Document Volume
 VOLUME /var/www/html
 
 # Switch to use a non-root user from here on
