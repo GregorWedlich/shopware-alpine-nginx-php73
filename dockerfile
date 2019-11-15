@@ -8,7 +8,7 @@ RUN apk update && \
     php7-json php7-zip php7-gd php7-xml php7-mbstring php7-opcache php7-session \
     php7-simplexml php7-pdo php7-pdo_mysql nginx php7-iconv php7-fileinfo php7-ftp \
     php7-opcache php7-pecl-apcu php7-dom php7-tokenizer supervisor curl nano unzip bash \
-    tzdata jpegoptim pngcrush
+    tzdata jpegoptim pngcrush optipng
 
 # Configure nginx
 COPY conf/nginx.conf /etc/nginx/nginx.conf
