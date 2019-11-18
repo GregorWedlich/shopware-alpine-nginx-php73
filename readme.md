@@ -18,7 +18,9 @@ PHP.post_max_size=8M
 ## **On browser**
 
 http://localhost/ // for install and frontend
+
 http://localhost/backend // backend
+
 http://localhost:8082 // phpmyadmin
 
 ## **Extra mysql Settings for Migrating Data and other perfomance tuning**
