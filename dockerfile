@@ -26,11 +26,6 @@ ENV PHP.max_execution_time=30 \
     PHP.upload_max_filesize=6M \
     PHP.post_max_size=8M
 
-# PHP limits
-# RUN sed -i -e 's/upload_max_filesize.*/upload_max_filesize = 256M/g' /etc/php7/php.ini && \
-#     sed -i -e 's/post_max_size.*/post_max_size = 128M/g' /etc/php7/php.ini && \
-#     sed -i -e 's/memory_limit.*/memory_limit = 512M/g' /etc/php7/php.ini
-
 # Add Shopware Settings
 RUN mkdir -p /etc/nginx/global/
 COPY conf/shopware.conf /etc/nginx/global/shopware.conf
@@ -44,22 +39,29 @@ RUN chown -R nobody.nobody /run && \
     chown -R nobody.nobody /var/tmp/nginx && \
     chown -R nobody.nobody /var/log/nginx
 
-# Setup document root
+# Create document root
 RUN mkdir -p /var/www/html
 
 # Add Shopware files
-RUN mkdir -p /home/shopware_files 
+RUN mkdir -p /home/shopware_files
+RUN mkdir -p /home/shopware_files/download
 ADD ./conf/download-sw.sh /home/shopware_files/download-sw.sh
 RUN chmod +x /home/shopware_files/download-sw.sh && /home/shopware_files/download-sw.sh
 
 # Add Opcache folder
-RUN mkdir -p /var/www/html/.opcache
+RUN mkdir -p /var/cache/.opcache
+RUN chown -R nobody.nobody /var/cache
 
-# 
+# Set rights
 RUN chown -R nobody.nobody /var/www/html
+RUN chown -R nobody.nobody /home/shopware_files
+
+# Add docker-entrypoint.sh
+ADD ./conf/docker-entrypoint.sh /home/shopware_files/docker-entrypoint.sh
+RUN chmod +x /home/shopware_files/docker-entrypoint.sh
 
 # Bind the Document Volume
-VOLUME /var/www/html
+VOLUME /var/www/html/themes
 
 # Switch to use a non-root user from here on
 USER nobody
@@ -70,8 +72,11 @@ WORKDIR /var/www/html
 # Expose the port nginx is reachable on
 EXPOSE 8080
 
+# Copy Shopwarefiles to Volume
+ENTRYPOINT ["/home/shopware_files/docker-entrypoint.sh"]
+
 # Let supervisord start nginx & php-fpm
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
-# Configure a healthcheck to validate that everything is up&running
-HEALTHCHECK --timeout=10s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping
+# Configure a healthcheck to validate that everything is up & running
+HEALTHCHECK --timeout=30s CMD curl --silent --fail http://127.0.0.1:8080/fpm-ping

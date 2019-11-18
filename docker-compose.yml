@@ -1,0 +1,57 @@
+version: "3.7"
+
+networks:
+  shopware_net:
+
+volumes:
+  database: {}
+
+services:
+  web:
+    image: prinzmonty/shopware-nginx-php73
+    container_name: ShopwareAlpine
+    ports:
+      - "80:8080"
+    volumes:
+      - ./public:/var/www/html/themes
+    environment:
+      - MYSQL_DATABASE=shopware
+      - MYSQL_USER=shopware
+      - MYSQL_PASSWORD=shopware
+      - MYSQL_HOST=shopware_db
+      - TZ=Europe/Berlin
+      # - PHP.max_execution_time=120
+    networks:
+      - shopware_net
+
+  mysql:
+    image: mysql:5.7
+    container_name: shopware_db
+    volumes:
+      - database:/var/lib/mysql
+      - ./mysql_set:/etc/mysql/conf.d # Mysql extra settings
+    expose:
+      - 3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=shopware
+      - MYSQL_DATABASE=shopware
+      - MYSQL_USER=shopware
+      - MYSQL_PASSWORD=shopware
+      - TZ=Europe/Berlin
+    networks:
+      - shopware_net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_ARBITRARY: 1
+      PMA_HOSTS: shopware_db
+      PMA_USER: shopware
+      PMA_PASSWORD: shopware
+      TZ: Europe/Berlin
+    expose:
+      - 80
+    ports:
+      - "8082:80"
+    networks:
+      - shopware_net

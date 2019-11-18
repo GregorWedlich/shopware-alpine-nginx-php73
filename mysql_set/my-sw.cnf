@@ -1,0 +1,10 @@
+[mysqld]
+innodb_buffer_pool_size=256MB
+group_concat_max_len=2048
+query_cache_size=100
+sort_buffer_size=256MB
+query_cache_type = 1
+query_cache_limit = 128K
+query_cache_min_res_unit = 2k
+query_cache_size = 40M
+read_buffer_size=1M
