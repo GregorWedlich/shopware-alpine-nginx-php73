@@ -8,7 +8,14 @@ RUN apk update && \
     php7-json php7-zip php7-gd php7-xml php7-mbstring php7-opcache php7-session \
     php7-simplexml php7-pdo php7-pdo_mysql nginx php7-iconv php7-fileinfo php7-ftp \
     php7-opcache php7-pecl-apcu php7-dom php7-tokenizer supervisor curl nano unzip bash \
-    tzdata jpegoptim pngcrush optipng
+    tzdata freetype freetype-dev libjpeg jpegoptim freetype pngcrush optipng zlib libpng-dev libjpeg-turbo-dev \
+    musl libwebp-dev shadow bzip2 libzip gettext ca-certificates icu libxml2 \
+    libxslt-dev libffi-dev pcre-dev wget ssmtp \
+    && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --allow-untrusted \
+    gnu-libiconv
+
+ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
+
 
 # Configure nginx
 COPY conf/nginx.conf /etc/nginx/nginx.conf
