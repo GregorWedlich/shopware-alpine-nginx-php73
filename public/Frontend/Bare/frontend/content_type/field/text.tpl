@@ -1,1 +1,0 @@
-{extends file="frontend/content_type/field/text-area.tpl"}
