@@ -14,13 +14,16 @@ services:
       - "80:8080"
     volumes:
       - ./public:/var/www/html/themes
+      - ./engine/Shopware/Plugins:/var/www/html/engine/Shopware/Plugins
+      - ./custom:/var/www/html/custom
     environment:
       - MYSQL_DATABASE=shopware
       - MYSQL_USER=shopware
       - MYSQL_PASSWORD=shopware
       - MYSQL_HOST=shopware_db
       - TZ=Europe/Berlin
-      # - PHP.max_execution_time=120
+      - PHP.max_execution_time=120
+      - PHP.memory_limit=512M
     networks:
       - shopware_net
 
