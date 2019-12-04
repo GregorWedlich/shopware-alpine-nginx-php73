@@ -10,9 +10,9 @@ RUN apk update && \
     php7-opcache php7-pecl-apcu php7-dom php7-tokenizer supervisor curl nano unzip bash \
     tzdata freetype freetype-dev libjpeg jpegoptim freetype pngcrush optipng zlib libpng-dev libjpeg-turbo-dev \
     musl libwebp-dev shadow bzip2 libzip gettext ca-certificates icu libxml2 \
-    libxslt-dev libffi-dev pcre-dev wget ssmtp \
+    libxslt-dev libffi-dev pcre-dev wget ssmtp php7-phar \
     && apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ --allow-untrusted \
-    gnu-libiconv
+    gnu-libiconv 
 
 ENV LD_PRELOAD /usr/lib/preloadable_libiconv.so php
 
